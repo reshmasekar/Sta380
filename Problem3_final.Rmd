@@ -1,0 +1,46 @@
+---
+output: word_document
+---
+#PROBLEM 3
+
+---
+title: "Problem3_final"
+author: "Reshms Sekar"
+date: "August 19, 2015"
+output: word_document
+---
+
+```{r,echo=TRUE}
+# Association rule mining
+# Adapted from code by Matt Taddy
+library('arules')  # has a big ecosystem of packages built around it
+
+# Read in playlists from users
+groceries <- read.csv("~/Desktop/STA380-master/data/groceries.txt")
+
+
+# First create a list of baskets: vectors of items by consumer
+# Analagous to bags of words
+
+# First split data into a list of artists for each user
+groceries <- split(groceries,f=",")
+## Remove duplicates ("de-dupe")
+groceries <- lapply(groceries, unique)
+
+## Cast this variable as a special arules "transactions" class.
+groceriestrans <- read.transactions("~/Desktop/STA380-master/data/groceries.txt",format=c("basket"),sep=",",encoding="unknown",rm.duplicates=TRUE)
+# Now run the 'apriori' algorithm
+# Look at rules with support > .01 & confidence >.5 & length (# artists) <= 4
+grocrules <- apriori(groceriestrans, 
+                     parameter=list(support=.01, confidence=.5, maxlen=4))
+#detach(package:tm, unload)=TRUE                    
+# Look at the output
+inspect(grocrules)
+
+## Choose a subset
+inspect(subset(grocrules, subset=support > .01 & confidence > 0.55))
+
+```
+From the above we can infer that whole milk is brought very often in combination with curd, yoghurt and
+butter and vegetables, eggs and vegetables and other vegetables are brought a lot often in 
+combination with root vegetables and fruits

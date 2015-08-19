@@ -1,0 +1,34 @@
+---
+title: "Problem 1"
+author: "Reshms Sekar"
+date: "August 19, 2015"
+output: word_document
+---
+
+```{r,echo=TRUE}
+library('ggplot2')
+library('XML')
+air=read.csv("~/Desktop/ABIA.csv")
+summary(air)
+names(air)
+attach(air)
+
+Departureflights=subset(air,Origin=='AUS')
+head(Departureflights,50)
+Depflightdelay=subset(Departureflights,DepDelay>4)
+departflightdelay=aggregate(Depflightdelay$DepDelay,list(Depflightdelay$UniqueCarrier),length)
+plot(departflightdelay,main='Delays in Departure flights',xlab='Unique carrier',ylab='Number of delays')
+```
+
+
+Creating a subset of arrival flights
+```{r,echo=TRUE}
+Arrivalflights=subset(air,Dest=='AUS')
+head(Arrivalflights,50)
+Arrflightdelay=subset(Arrivalflights,ArrDelay>4)
+Arrflightdelay=aggregate(Arrflightdelay$ArrDelay,list(Arrflightdelay$UniqueCarrier),length)
+plot(Arrflightdelay,main='Delay in arrival flights',xlab='Unique carrier',ylab='Number of delays')
+
+```
+
+From the above two plots we can infer which airlines has the most number of delays and which airlines has the least number of delays, which can help us choose an airline we favor for travel.
